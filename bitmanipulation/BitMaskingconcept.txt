@@ -1,0 +1,612 @@
+BITMASKING NOTES (DSA REVISION)
+
+1) WHAT IS BITMASKING?
+
+Bitmasking is a technique where we use the bits of an integer to represent information.
+
+Instead of using:
+set<char>
+unordered_set<char>
+vector<bool>
+
+we can use:
+int mask = 0;
+
+Each bit stores whether something is present or absent.
+
+--------------------------------------------------
+
+2) CORE IDEA
+
+Each bit represents one item.
+
+Example for lowercase letters:
+
+bit 0 -> 'a'
+bit 1 -> 'b'
+bit 2 -> 'c'
+...
+bit 25 -> 'z'
+
+If a bit is 1, that letter is present.
+If a bit is 0, that letter is absent.
+
+--------------------------------------------------
+
+3) BINARY BASICS
+
+Example:
+5
+
+in binary:
+00000101
+
+This means:
+bit 0 = 1
+bit 1 = 0
+bit 2 = 1
+
+So:
+5 = 2^2 + 2^0 = 4 + 1
+
+--------------------------------------------------
+
+4) LEFT SHIFT (<<)
+
+1 << k
+
+means:
+
+Shift binary 1 to the left by k positions
+
+Examples:
+
+1 << 0 = 1      // 00000001
+1 << 1 = 2      // 00000010
+1 << 2 = 4      // 00000100
+1 << 3 = 8      // 00001000
+1 << 4 = 16     // 00010000
+
+IMPORTANT MEANING:
+1 << k
+
+means:
+
+"Create a number where only bit k is ON"
+
+--------------------------------------------------
+
+5) WHY 1 << (ch - 'a') ?
+
+Suppose:
+char ch = 'c';
+
+Then:
+ch - 'a' = 2
+
+So:
+1 << (ch - 'a') = 1 << 2 = 4
+
+Binary:
+00000100
+
+That means:
+
+Turn ON the bit for 'c'
+
+--------------------------------------------------
+
+6) MOST IMPORTANT BITMASK OPERATIONS
+
+(A) TURN ON A BIT
+Used to mark something as present.
+
+mask |= (1 << i);
+
+Example:
+mask |= (1 << 2);   // turn ON bit 2
+
+--------------------------------------------------
+
+(B) CHECK IF A BIT IS ON
+Used to check if something is present.
+
+if (mask & (1 << i))
+
+Example:
+if (mask & (1 << 2))   // is bit 2 ON?
+
+--------------------------------------------------
+
+(C) TURN OFF A BIT
+Used to remove something.
+
+mask &= ~(1 << i);
+
+Example:
+mask &= ~(1 << 2);   // turn OFF bit 2
+
+--------------------------------------------------
+
+(D) TOGGLE A BIT
+If bit is ON -> OFF
+If bit is OFF -> ON
+
+mask ^= (1 << i);
+
+Example:
+mask ^= (1 << 2);
+
+--------------------------------------------------
+
+7) MEANING OF |=
+
+mask |= something;
+
+means:
+
+Do bitwise OR and store back in mask
+
+Truth table of OR:
+
+0 | 0 = 0
+0 | 1 = 1
+1 | 0 = 1
+1 | 1 = 1
+
+Why OR is used?
+
+Because it helps us:
+
+Turn a bit ON without disturbing already ON bits
+
+--------------------------------------------------
+
+8) EXAMPLE OF STORING LETTERS
+
+Suppose string is:
+"ac"
+
+We want to store which lowercase letters are present.
+
+Start:
+int mask = 0;
+
+Binary:
+00000000
+
+--------------------------------------------------
+
+See 'a'
+
+mask |= (1 << ('a' - 'a'));
+mask |= (1 << 0);
+mask |= 1;
+
+Now:
+00000001
+
+Meaning:
+'a' present
+
+--------------------------------------------------
+
+See 'c'
+
+mask |= (1 << ('c' - 'a'));
+mask |= (1 << 2);
+mask |= 4;
+
+Now:
+00000101
+
+Meaning:
+'a' present
+'c' present
+
+So:
+mask = 5
+
+actually represents:
+{'a', 'c'}
+
+--------------------------------------------------
+
+9) IMPORTANT UNDERSTANDING
+
+Bitmask does NOT store values like an array.
+
+It stores:
+
+Which items are present / absent
+
+So one integer can act like a compact set.
+
+--------------------------------------------------
+
+10) HOW TO CHECK IF A CHARACTER EXISTS
+
+Suppose:
+mask = 5;   // binary = 00000101
+
+This means:
+'a' present
+'c' present
+
+--------------------------------------------------
+
+Check if 'c' exists
+
+if (mask & (1 << ('c' - 'a')))
+
+Becomes:
+if (mask & (1 << 2))
+if (5 & 4)
+
+Binary:
+00000101
+00000100
+--------
+00000100
+
+Non-zero -> 'c' exists
+
+--------------------------------------------------
+
+Check if 'b' exists
+
+if (mask & (1 << ('b' - 'a')))
+
+Becomes:
+if (5 & 2)
+
+Binary:
+00000101
+00000010
+--------
+00000000
+
+Zero -> 'b' does not exist
+
+--------------------------------------------------
+
+11) WHEN SHOULD I THINK OF BITMASKING?
+
+Use bitmasking when the problem has a small fixed set of things.
+
+Examples:
+- 26 lowercase letters
+- 10 digits
+- 5 vowels
+- small set of people / tasks / items
+- subsets of array of size <= 20
+
+--------------------------------------------------
+
+12) SIGNS THAT BITMASKING MAY BE USEFUL
+
+Think of bitmasking if problem says:
+
+(1) Track presence / absence
+Examples:
+- which letters are present
+- which digits are used
+- which vowels are seen
+
+(2) Compare sets quickly
+Examples:
+- compare characters of two substrings
+- check if two strings have same set of letters
+
+(3) Work with subsets
+Examples:
+- all subsets of array
+- choose some tasks / people / items
+
+--------------------------------------------------
+
+13) BEGINNER RULE
+
+Whenever the problem is asking:
+
+"Which items are present?"
+
+and the number of items is small,
+
+think:
+
+Can I use a bitmask instead of a set?
+
+--------------------------------------------------
+
+14) LONGEST NICE SUBSTRING – BITMASK USE
+
+Problem idea:
+
+A substring is nice if:
+
+For every letter present, both lowercase and uppercase exist
+
+--------------------------------------------------
+
+Use two masks
+
+int lower = 0;
+int upper = 0;
+
+lower stores lowercase letters present
+upper stores uppercase letters present
+
+--------------------------------------------------
+
+If char is lowercase
+
+lower |= (1 << (s[j] - 'a'));
+
+--------------------------------------------------
+
+If char is uppercase
+
+upper |= (1 << (s[j] - 'A'));
+
+--------------------------------------------------
+
+Nice condition
+
+if (lower == upper)
+
+Why?
+
+Because if both masks are equal, then every letter that appears in lowercase also appears in uppercase and vice versa.
+
+--------------------------------------------------
+
+15) EXAMPLE: "aA"
+
+Start:
+
+lower = 0;
+upper = 0;
+
+--------------------------------------------------
+
+See 'a'
+
+lower |= (1 << 0);
+
+Now:
+lower = 00000001
+upper = 00000000
+
+--------------------------------------------------
+
+See 'A'
+
+upper |= (1 << 0);
+
+Now:
+lower = 00000001
+upper = 00000001
+
+So:
+lower == upper
+
+Substring is nice
+
+--------------------------------------------------
+
+16) EXAMPLE: "aAB"
+
+Lowercase letters:
+a
+
+Uppercase letters:
+A, B
+
+So:
+lower = 00000001
+upper = 00000011
+
+Now:
+lower != upper
+
+Substring is NOT nice
+
+--------------------------------------------------
+
+17) LONGEST NICE SUBSTRING CODE (BITMASK)
+
+class Solution {
+public:
+    string longestNiceSubstring(string s) {
+        int n = s.size();
+        string ans = "";
+
+        for (int i = 0; i < n; i++) {
+            int lower = 0, upper = 0;
+
+            for (int j = i; j < n; j++) {
+                if (islower(s[j])) {
+                    lower |= (1 << (s[j] - 'a'));
+                } else {
+                    upper |= (1 << (s[j] - 'A'));
+                }
+
+                if (lower == upper) {
+                    if (j - i + 1 > ans.size()) {
+                        ans = s.substr(i, j - i + 1);
+                    }
+                }
+            }
+        }
+
+        return ans;
+    }
+};
+
+--------------------------------------------------
+
+18) TIME COMPLEXITY OF ABOVE CODE
+
+Outer loop:
+O(n)
+
+Inner loop:
+O(n)
+
+So total:
+O(n^2)
+
+Space:
+O(1)
+
+because only a few integers are used.
+
+--------------------------------------------------
+
+19) SUBSET GENERATION USING BITMASK
+
+If array size is n, total subsets are:
+
+2^n
+
+We can generate all subsets like this:
+
+for (int mask = 0; mask < (1 << n); mask++) {
+    // each mask represents one subset
+}
+
+--------------------------------------------------
+
+20) EXAMPLE
+
+arr = [10, 20, 30]
+n = 3
+
+Then:
+mask = 0 to 7
+
+because:
+1 << 3 = 8
+
+So masks:
+
+000 -> {}
+001 -> {10}
+010 -> {20}
+011 -> {10,20}
+100 -> {30}
+101 -> {10,30}
+110 -> {20,30}
+111 -> {10,20,30}
+
+--------------------------------------------------
+
+21) CODE TO GENERATE ALL SUBSETS
+
+vector<vector<int>> subsets(vector<int>& nums) {
+    int n = nums.size();
+    vector<vector<int>> ans;
+
+    for (int mask = 0; mask < (1 << n); mask++) {
+        vector<int> temp;
+
+        for (int i = 0; i < n; i++) {
+            if (mask & (1 << i)) {
+                temp.push_back(nums[i]);
+            }
+        }
+
+        ans.push_back(temp);
+    }
+
+    return ans;
+}
+
+--------------------------------------------------
+
+22) USEFUL BUILT-IN BIT FUNCTIONS
+
+(A) Count number of set bits
+
+__builtin_popcount(mask)
+
+Example:
+__builtin_popcount(13)
+
+Binary of 13:
+1101
+
+Answer:
+3
+
+--------------------------------------------------
+
+(B) Check if number is power of 2
+
+(mask & (mask - 1)) == 0
+
+Example:
+8  -> true
+10 -> false
+
+--------------------------------------------------
+
+(C) Get lowest set bit
+
+mask & -mask
+
+Used in advanced problems.
+
+--------------------------------------------------
+
+23) GOLDEN SUMMARY
+
+1 << i
+means:
+
+Create a number where only bit i is ON
+
+mask |= (1 << i)
+means:
+
+Mark item i as present
+
+mask & (1 << i)
+means:
+
+Check if item i is present
+
+Bitmask is mainly used when:
+
+We need to store presence / absence of a small fixed set
+
+--------------------------------------------------
+
+24) BEST MENTAL MODEL
+
+Always ask:
+
+"What does bit i represent in this problem?"
+
+If you can answer that, bitmasking becomes easy.
+
+Examples:
+
+bit 0 = 'a'
+bit 1 = 'b'
+bit 2 = 'c'
+
+or
+
+bit 0 = first element chosen
+bit 1 = second element chosen
+bit 2 = third element chosen
+
+That is the core of bitmasking.
+
+--------------------------------------------------
+
+25) FINAL ONE-LINE DEFINITION
+
+Bitmasking = using bits of an integer to represent a set efficiently
