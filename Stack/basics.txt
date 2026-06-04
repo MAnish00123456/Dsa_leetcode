@@ -1,0 +1,477 @@
+MONOTONIC STACK - COMPLETE NOTES
+
+==================================================
+
+1. WHAT IS A MONOTONIC STACK?
+   ==================================================
+
+A monotonic stack is a stack whose elements are maintained in a sorted order.
+
+There are two types:
+
+1. Monotonically Increasing Stack
+   Bottom -> Top : Increasing order
+
+   Example:
+   Bottom
+   10
+   20
+   30
+   Top
+
+2. Monotonically Decreasing Stack
+   Bottom -> Top : Decreasing order
+
+   Example:
+   Bottom
+   100
+   80
+   60
+   Top
+
+Important:
+The monotonic property is described from BOTTOM to TOP.
+
+For a decreasing stack:
+
+Bottom > ... > Top
+
+For an increasing stack:
+
+Bottom < ... < Top
+
+==================================================
+2. WHY DO WE USE MONOTONIC STACKS?
+==================================
+
+Monotonic stacks help find:
+
+* Next Greater Element
+* Previous Greater Element
+* Next Smaller Element
+* Previous Smaller Element
+* Stock Span
+* Daily Temperatures
+* Largest Rectangle in Histogram
+* Trapping Rain Water
+
+They often reduce O(n²) solutions to O(n).
+
+==================================================
+3. CORE IDEA
+============
+
+Before inserting the current element, remove all elements that are useless.
+
+Generic Template:
+
+while(!st.empty() && condition)
+{
+st.pop();
+}
+
+answer using st.top();
+
+st.push(current);
+
+==================================================
+4. INCREASING STACK
+===================
+
+Maintains:
+
+Bottom < ... < Top
+
+Example:
+
+Bottom
+2
+5
+8
+Top
+
+To maintain increasing order:
+
+while(!st.empty() && st.top() >= current)
+{
+st.pop();
+}
+
+st.push(current);
+
+Used for:
+
+* Previous Smaller Element
+* Next Smaller Element
+* Histogram Problems
+
+==================================================
+5. DECREASING STACK
+===================
+
+Maintains:
+
+Bottom > ... > Top
+
+Example:
+
+Bottom
+100
+80
+60
+Top
+
+To maintain decreasing order:
+
+while(!st.empty() && st.top() <= current)
+{
+st.pop();
+}
+
+st.push(current);
+
+Used for:
+
+* Previous Greater Element
+* Next Greater Element
+* Stock Span
+* Daily Temperatures
+
+==================================================
+6. NEXT GREATER ELEMENT (NGE)
+=============================
+
+Problem:
+
+For each element, find first greater element on the right.
+
+Example:
+
+[2,1,5,3]
+
+Answer:
+
+2 -> 5
+1 -> 5
+5 -> -1
+3 -> -1
+
+Approach:
+
+Traverse from right to left.
+
+Use decreasing stack.
+
+Remove smaller elements.
+
+Remaining top becomes answer.
+
+==================================================
+7. PREVIOUS GREATER ELEMENT (PGE)
+=================================
+
+Problem:
+
+For each element, find first greater element on the left.
+
+Example:
+
+[2,1,5,3]
+
+Answer:
+
+2 -> None
+1 -> 2
+5 -> None
+3 -> 5
+
+Approach:
+
+Traverse from left to right.
+
+Use decreasing stack.
+
+==================================================
+8. NEXT SMALLER ELEMENT (NSE)
+=============================
+
+Problem:
+
+Find first smaller element on the right.
+
+Example:
+
+[4,8,5,2]
+
+Answer:
+
+4 -> 2
+8 -> 5
+5 -> 2
+2 -> None
+
+Approach:
+
+Traverse right to left.
+
+Use increasing stack.
+
+==================================================
+9. PREVIOUS SMALLER ELEMENT (PSE)
+=================================
+
+Problem:
+
+Find first smaller element on the left.
+
+Example:
+
+[4,8,5,2]
+
+Answer:
+
+4 -> None
+8 -> 4
+5 -> 4
+2 -> None
+
+Approach:
+
+Traverse left to right.
+
+Use increasing stack.
+
+==================================================
+10. INDEX STACK VS VALUE STACK
+==============================
+
+A. Value Stack
+
+stack<int> st;
+
+Stores actual values.
+
+Used when only value is needed.
+
+Examples:
+
+* NGE
+* NSE
+* PGE
+* PSE
+
+B. Index Stack
+
+stack<int> st;
+
+Stores indices.
+
+Values are accessed as:
+
+arr[st.top()]
+
+Used when distance is needed.
+
+Examples:
+
+* Stock Span
+* Daily Temperatures
+* Histogram Problems
+
+==================================================
+11. STOCK SPAN
+==============
+
+Problem:
+
+Prices:
+
+100 80 60 70 60 75 85
+
+Find span of each day.
+
+Span means:
+
+Number of consecutive days before current day
+having price <= current price.
+
+Approach:
+
+Maintain decreasing stack of indices.
+
+For current price:
+
+while(!st.empty() && price[st.top()] <= current)
+{
+st.pop();
+}
+
+If stack becomes empty:
+
+span = i + 1
+
+Else:
+
+span = i - st.top()
+
+Push current index.
+
+Key Observation:
+
+After popping,
+st.top() becomes nearest previous greater price.
+
+==================================================
+12. DAILY TEMPERATURES
+======================
+
+Problem:
+
+For each day,
+find number of days until a warmer temperature.
+
+Example:
+
+[73,74,75,71,69,72,76,73]
+
+Answer:
+
+[1,1,4,2,1,1,0,0]
+
+Approach:
+
+Find Next Greater Element Index.
+
+Store indices in stack.
+
+Answer:
+
+nextGreaterIndex - currentIndex
+
+==================================================
+13. LARGEST RECTANGLE IN HISTOGRAM
+==================================
+
+One of the most important monotonic stack problems.
+
+Need:
+
+* Previous Smaller Element
+* Next Smaller Element
+
+Use increasing stack.
+
+Time Complexity:
+
+O(n)
+
+==================================================
+14. TRAPPING RAIN WATER
+=======================
+
+Example:
+
+0 1 0 2 1 0 1 3
+
+Use a decreasing stack.
+
+When a taller bar appears,
+water trapped between boundaries can be calculated.
+
+==================================================
+15. INTERVIEW RECOGNITION PATTERNS
+==================================
+
+If the problem says:
+
+* Nearest Greater
+* Nearest Smaller
+* First Greater
+* First Smaller
+* Previous Greater
+* Previous Smaller
+* Next Greater
+* Next Smaller
+* Warmer Day
+* Taller Building
+
+Think:
+
+MONOTONIC STACK
+
+If your brute force looks like:
+
+for(i)
+{
+for(j)
+{
+search left/right
+}
+}
+
+There is a high chance that a monotonic stack can reduce it to O(n).
+
+==================================================
+16. MASTER RULE
+===============
+
+Need GREATER element?
+
+Pop SMALLER elements.
+
+while(!st.empty() && st.top() <= current)
+{
+st.pop();
+}
+
+Need SMALLER element?
+
+Pop GREATER elements.
+
+while(!st.empty() && st.top() >= current)
+{
+st.pop();
+}
+
+==================================================
+17. COMPLEXITY
+==============
+
+Each element:
+
+* Pushed once
+* Popped at most once
+
+Therefore:
+
+Total Operations = O(n)
+
+Time Complexity = O(n)
+
+Space Complexity = O(n)
+
+==================================================
+18. STOCK SPANNER CONNECTION
+============================
+
+Your solution uses:
+
+Monotonically Decreasing Stack of Indices
+
+Invariant:
+
+StockPrice[stack[0]] >
+StockPrice[stack[1]] >
+StockPrice[stack[2]] >
+...
+
+(bottom to top)
+
+After removing all smaller/equal prices,
+the stack top becomes the nearest previous greater price.
+
+Span:
+
+st.empty() ? i + 1 : i - st.top()
+
+This is why your solution works in O(n).
