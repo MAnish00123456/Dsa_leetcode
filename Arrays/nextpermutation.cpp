@@ -2,7 +2,7 @@
 //agar koi permutation available na ho to given vector ko reverse krke return karenge.
 //for ex = { 1,2,3 }
 //to iska next permutation hoga vo ={ 1,3,2 }
-//Agar given array ko hum backward travel karenge  to ek point aisa aayega jo apne next point se bada hoga. Vo humara Pivot hoga.
+//Agar given array ko hum backward travel karenge  to ek point aisa aayega jo apne next point se chota hoga. Vo humara Pivot hoga.
 //Pivot milne ke baad , rightmost element lenge jo pivot se just bada hoga , uske sath hum pivot ko swap kar denge.
 // phir pivot + 1 se size -1 wale elements ko reverse kar denge
 #include<iostream>
