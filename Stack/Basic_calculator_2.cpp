@@ -22,9 +22,6 @@ class Solution {
         if (op == '*')
             return val1 * val2;
         if (op == '/') {
-            if (val1 * val2 < 0 && val1 % val2 != 0) {
-                return (val1 / val2) - 1;
-            }
             return (val1 / val2);
         }
         return 0;
