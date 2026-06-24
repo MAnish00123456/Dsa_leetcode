@@ -35,7 +35,7 @@ public:
 //                 curr= curr->next;
 //                 curr->prev = PN;
 //                  flatten(curr);
-//                 Node* tmptail = curr;;
+//                 Node* tmptail = curr;
 
 //                 while(tmptail->next != NULL){
 //                     tmptail = tmptail->next;
