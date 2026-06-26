@@ -67,8 +67,8 @@ class Solution {
     };
 
     int main(){
-        std::vector<std::string>words = {"i","love","leetcode","i","love","coding"};
-        int k = 3;
+        std::vector<std::string>words = {"i","love","coding","i","love","coding"};
+        int k = 2;
         Solution sol1;
         std::vector<std::string>Ans = sol1.topKFrequent(words,k);
         for(auto s : Ans)std::cout<<s<<" ";
