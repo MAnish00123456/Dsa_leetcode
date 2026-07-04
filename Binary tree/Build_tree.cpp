@@ -99,6 +99,21 @@ while(!q.empty()){
 }
 return;
 }
+//max distance from root node to a leaf node
+int height(Node* root){
+
+    if(root == nullptr)return 0;
+    int lftheight = height(root->left);
+    int rtheight = height(root->right);
+    return std::max(lftheight,rtheight)+1;
+}
+//count number of nodes in tree
+int count(Node* root){
+    if(root == nullptr)return 0;
+    int lftcnt = count(root->left);
+    int rtcnt = count(root->right);
+    return (lftcnt+rtcnt+1);//+ 1 for the root node
+}
 int main(){
     std::vector<int> Preorder_sequence ={1,2,-1,-1,3,4,-1,-1,5,-1,-1};
     Node* root = BuildTree(Preorder_sequence);
@@ -109,5 +124,9 @@ int main(){
     postOrder_traversal(root);
     std::cout<<std::endl;
     LevelOrder(root);
+    std::cout<<std::endl;
+    std::cout<<"Height : "<<height(root);
+    std::cout<<std::endl;
+    std::cout<<"Count of nodes : "<<count(root);
     return 0;
 }
