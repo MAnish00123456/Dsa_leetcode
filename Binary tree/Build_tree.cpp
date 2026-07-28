@@ -114,19 +114,32 @@ int count(Node* root){
     int rtcnt = count(root->right);
     return (lftcnt+rtcnt+1);//+ 1 for the root node
 }
+
+int sumTree(Node* root){
+
+    if(root == nullptr)return 0;
+    int lftSum = sumTree(root->left);
+    int rtSum = sumTree(root->right);
+    root->value = lftSum + rtSum + root->value;
+    return root->value;
+}
+
 int main(){
     std::vector<int> Preorder_sequence ={1,2,-1,-1,3,4,-1,-1,5,-1,-1};
     Node* root = BuildTree(Preorder_sequence);
     preOrder_traversal(root);
+    sumTree(root);
     std::cout<<std::endl;
-    inorder_traversal(root);
-    std::cout<<std::endl;
-    postOrder_traversal(root);
-    std::cout<<std::endl;
-    LevelOrder(root);
-    std::cout<<std::endl;
-    std::cout<<"Height : "<<height(root);
-    std::cout<<std::endl;
-    std::cout<<"Count of nodes : "<<count(root);
+    preOrder_traversal(root);
+    // std::cout<<std::endl;
+    // inorder_traversal(root);
+    // std::cout<<std::endl;
+    // postOrder_traversal(root);
+    // std::cout<<std::endl;
+    // LevelOrder(root);
+    // std::cout<<std::endl;
+    // std::cout<<"Height : "<<height(root);
+    // std::cout<<std::endl;
+    // std::cout<<"Count of nodes : "<<count(root);
     return 0;
 }
