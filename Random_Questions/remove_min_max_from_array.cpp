@@ -1,0 +1,68 @@
+// You are given a 0-indexed array of distinct integers nums.
+
+// There is an element in nums that has the lowest value and an element that has the highest value. We call them the minimum and maximum respectively. Your goal is to remove both these elements from the array.
+
+// A deletion is defined as either removing an element from the front of the array or removing an element from the back of the array.
+
+// Return the minimum number of deletions it would take to remove both the minimum and maximum element from the array.
+
+ 
+
+// Example 1:
+
+// Input: nums = [2,10,7,5,4,1,8,6]
+// Output: 5
+// Explanation: 
+// The minimum element in the array is nums[5], which is 1.
+// The maximum element in the array is nums[1], which is 10.
+// We can remove both the minimum and maximum by removing 2 elements from the front and 3 elements from the back.
+// This results in 2 + 3 = 5 deletions, which is the minimum number possible.
+// Example 2:
+
+// Input: nums = [0,-4,19,1,8,-2,-3,5]
+// Output: 3
+// Explanation: 
+// The minimum element in the array is nums[1], which is -4.
+// The maximum element in the array is nums[2], which is 19.
+// We can remove both the minimum and maximum by removing 3 elements from the front.
+// This results in only 3 deletions, which is the minimum number possible.
+
+
+#include<iostream>
+#include<vector>
+using namespace std;
+
+class Solution {
+    public:
+        int minimumDeletions(vector<int>& nums) {
+            
+            int max_i = -1;
+            int min_i = -1;
+            int maxNum = INT_MIN;
+            int minNum = INT_MAX;
+            for(int i = 0 ; i < nums.size() ; i++){
+                if(nums[i] > maxNum){
+                    maxNum = nums[i];
+                    max_i = i;
+                }
+                if(minNum > nums[i]){
+                    minNum = minNum = nums[i];
+                    min_i = i;
+                }
+            }
+            int n = nums.size();
+            int start_se_delete = max(max_i,min_i) + 1;
+            int peeche_se_delete = n- min(min_i,max_i);
+            int aage_Peeche_se_delete = 1+min(min_i,max_i) + n-max(max_i,min_i);
+            int final_ans = min(start_se_delete,min(peeche_se_delete,aage_Peeche_se_delete));
+    
+            return final_ans;
+        }
+    };
+
+int main(){
+    vector<int>nums = {2,10,7,5,4,1,8,6};
+    Solution sol1;
+    cout<<sol1.minimumDeletions(nums);
+    return 0;
+}
